@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="百度地图,百度地图API，百度地图自定义工具，百度地图所见即所得工具" />
+    <meta name="description" content="百度地图API自定义地图，帮助用户在可视化操作下生成百度地图" />
+    <title>百度地图API自定义地图</title>
+    <!--引用百度地图API-->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=XCVLhSKz8H4STvokTq3UtvuAh09NcWCE"></script>
+	<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script src="http://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+  </head>
+  
+  <body>
+    <!--百度地图容器-->
+	<div style="width:100%;height:755px;border:#ccc solid 1px;font-size:12px" >
+	<a id="down_button">下载</a>    
+	</div>
+    <div style="width:100%;height:745px;border:#ccc solid 1px;font-size:12px" id="map"></div>
+    
+  </body>
+  <script type="text/javascript">
+    //创建和初始化地图函数：
+    function initMap(){
+      createMap();//创建地图
+      setMapEvent();//设置地图事件
+      addMapControl();//向地图添加控件
+      addMapOverlay();//向地图添加覆盖物
+    }
+    function createMap(){ 
+      map = new BMap.Map("map"); 
+      map.centerAndZoom(new BMap.Point(114.520828,38.048684),12);
+    }
+    function setMapEvent(){
+      map.enableScrollWheelZoom();
+      map.enableKeyboard();
+      map.enableDragging();
+      map.enableDoubleClickZoom()
+    }
+    function addClickHandler(target,window){
+      target.addEventListener("click",function(){
+        target.openInfoWindow(window);
+      });
+    }
+    function addMapOverlay(){
+    }
+    //向地图添加控件
+    function addMapControl(){
+      var navControl = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+      map.addControl(navControl);
+    }
+    var map;
+      initMap();
+	
+	
+	var lngleft=114.162081,lngright=114.872101,latright=38.190851,latleft=37.904872;
+	var bounds=new Array();
+	function drawrectangle(pStart,pEnd)
+	{
+		var rectangle = new BMap.Polygon([
+			new BMap.Point(pStart.lng,pStart.lat),
+			new BMap.Point(pEnd.lng,pStart.lat),
+			new BMap.Point(pEnd.lng,pEnd.lat),
+			new BMap.Point(pStart.lng,pEnd.lat)
+		], {strokeColor:"blue", strokeWeight:1, strokeOpacity:1,fillOpacity:0});  //创建矩形
+		
+		map.addOverlay(rectangle);
+	}
+
+	//812
+	
+	function cut(){
+		var drawit=true;
+		var i=0;
+		for(var toplng=lngleft;toplng<lngright;toplng+=0.0135)
+		{
+			for(var bottomlat=latright;bottomlat>latleft;bottomlat-=0.0053)
+			{
+				var pStart = new BMap.Point(toplng,bottomlat);
+				var pEnd = new BMap.Point(toplng+0.0135,bottomlat-0.0053);	
+				if(drawit){
+					var bound = new BMap.Bounds(pStart,pEnd);
+					bounds[bounds.length]=bound;
+				}
+				//drawit=false;
+				//drawrectangle(pStart,pEnd);
+				i++;
+			}
+		}
+		alert(i);
+	}
+	
+	cut();
+	
+	for(var i=0;i<bounds.length;i++){
+		map.centerAndZoom(bounds[i].getCenter(),18);
+	}
+	
+	//drawrectangle(pStart,pEnd);
+	//var marker = new BMap.Marker(pStart);
+	//map.addOverlay(marker);
+	//marker = new BMap.Marker(pEnd);
+	//map.addOverlay(marker);
+	//alert(map.getDistance(pStart,point));
+	
+	
+	
+  </script>
+</html>
