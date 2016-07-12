@@ -6,4 +6,4 @@ baiduMapDrawRectangle.html
 如果真要做，后面可加入html2cavans.js实现将DIV转换为cavans之后保存为图片。
 
 html2canvasDemo.html
-html2canvas例子。
+例子一枚。
